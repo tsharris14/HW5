@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 t_var:var
 t_integer:integer
 t_id:x
@@ -8,3 +9,15 @@ s_lparen:(
 t_id:x
 s_rparen:)
 t_end:end
+=======
+t_var:var
+t_integer:integer
+t_id:x
+s_semi:;
+t_main:main
+t_input:input
+s_lparen:(
+t_id:x
+s_rparen:)
+t_end:end
+>>>>>>> e37a809d949387847a8c9b0bfd50c5870d66c9fb
