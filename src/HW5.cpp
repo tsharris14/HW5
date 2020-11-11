@@ -293,6 +293,7 @@ bool SyntaxAnalyzer::elsepart(){
 	}
 
 //WHILESTMT -> while (EXPR) loop STMTLIST end loop
+// Luis Gonzalez
 bool SyntaxAnalyzer::whilestmt(){
 	return true;
 	// write this function
@@ -383,6 +384,7 @@ bool SyntaxAnalyzer::expr(){
 }
 
 //SIMPLEEXPR -> TERM [ARITHOP | RELOP TERM]
+// Luis Gonzalez
 bool SyntaxAnalyzer::simpleexpr(){
 	return true;
     // write this function
