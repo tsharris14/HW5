@@ -43,6 +43,7 @@ class SyntaxAnalyzer{
         bool logicop();
         bool arithop();
         bool relop();
+        bool decVars(string var, string tok);//returns true/false if var has been declared and has correct type
         std::istream& getline_safe(std::istream& input, std::string& output);
     public:
         SyntaxAnalyzer(istream& infile);
@@ -57,6 +58,14 @@ class SyntaxAnalyzer{
         // If an error occurs, a message prints indicating the token/lexeme pair
         // that caused the error.  If no error occurs, the symboltable contains all
         // variables and datatypes.
+
+        /*void print(){
+        	cout<< "declared variables" << endl;
+        	for (int i = 0; i <declaredVars.size();i++){
+        		cout <<declaredVars[i] <<endl;
+        	}
+        }*/
+
 };
 SyntaxAnalyzer::SyntaxAnalyzer(istream& infile){
     string line, tok, lex;
@@ -144,12 +153,12 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
     string temp,type,var;
     if (*tokitr == "t_integer"){
         temp = "t_integer";
-        type = *lexitr;//store type
+        type = *tokitr;//store type
         tokitr++; lexitr++;
     }
     else if (*tokitr == "t_string"){
         temp = "t_string";
-        type = *lexitr;//store type
+        type = *tokitr;//store type
         tokitr++; lexitr++;
     }
     else
@@ -165,10 +174,8 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
             }
             else if (tokitr != tokens.end() && *tokitr == "s_semi"){
                 semihit = true;
-                declaredVars.push_back(type);//store valid variable type
-                declaredVars.push_back(var);//store variable
-                //cout << type << endl;
-                //cout << var << endl;
+                declaredVars.push_back(type);//store type in vector
+                declaredVars.push_back(var);//store variable in vector
                 tokitr++; lexitr++;
             }
             else
@@ -181,6 +188,20 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
     return result;
 }
 
+//pre: user passes in variable and the token of the data being assigned to it
+//post: returns true/false if variable has been declared and type is correct
+bool SyntaxAnalyzer::decVars(string var, string tok){
+	for (int i = 0; i < declaredVars.size(); i++){
+		if (declaredVars[i] == var){
+			cout << "variable was declared" <<endl;
+			if (declaredVars[i+1] == tok){
+				cout << "correct type" <<endl;
+				return true;//variable declared and correct type
+			}
+		}
+	}
+	return false;//undeclared var
+}
 //STMTLIST -> STMT {STMT} | 0
 bool SyntaxAnalyzer::stmtlist(){
     int result = stmt();
@@ -286,6 +307,8 @@ bool SyntaxAnalyzer::assignstmt(){
 			if(expr()){
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
 					tokitr++; lexitr++;
+
+
 					return true;
 				}
 			}
@@ -435,6 +458,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
     return input;
 }
 
+
 int main(){
     ifstream infile("codelexemes.txt");
     if (!infile){
@@ -443,5 +467,8 @@ int main(){
     }
     SyntaxAnalyzer sa(infile);
     sa.parse();
+
+    //sa.print();
+
     return 1;
 }
