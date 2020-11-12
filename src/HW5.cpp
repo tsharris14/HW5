@@ -86,7 +86,9 @@ SyntaxAnalyzer::SyntaxAnalyzer(istream& infile){
 }
 
 bool SyntaxAnalyzer::parse(){
+	cout<<"*parse() method"<<endl;
     if (vdec()){
+    	cout<<*tokitr<<endl;
         if (tokitr!=tokens.end() && *tokitr=="t_main"){
             tokitr++; lexitr++;
             if (tokitr!=tokens.end() && stmtlist()){
@@ -126,6 +128,8 @@ bool SyntaxAnalyzer::parse(){
 //TaCoya
 //VDEC -> var VARS {VARS} | 0
 bool SyntaxAnalyzer::vdec(){
+	cout << "*vdec" << endl;
+	cout << *tokitr << endl;
     if (*tokitr != "t_var")//if not a variable
         return true;
     else{ // token is a variable
@@ -149,6 +153,7 @@ bool SyntaxAnalyzer::vdec(){
 //TaCoya
 //VARS -> TYPE id {, id} ;
 int SyntaxAnalyzer::vars(){//determines if type is valid
+	cout << "*vars method" << endl;
     int result = 0;  // 0 - valid, 1 - done, 2 - error
     string temp,type,var;
     if (*tokitr == "t_integer"){
@@ -469,9 +474,10 @@ bool SyntaxAnalyzer::arithop(){
         tokitr++; lexitr++;
         return true;
     }
-    else
+    else{
     	cout << "false" << endl;
         return false;
+    }
 }
 
 //RELOP -> == | < | <= | > | >= | !=

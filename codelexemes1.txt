@@ -6,6 +6,5 @@ t_main:main
 t_id:x
 s_assign:=
 t_int:5
-s_eq:==
 s_semi:;
 t_end:end
