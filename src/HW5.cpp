@@ -336,6 +336,7 @@ bool SyntaxAnalyzer::assignstmt(){
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
 			//cout << valueType << endl;
+			decVars(variable, valueType);
 			if(expr()){
 				cout << *tokitr << endl;
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
@@ -353,6 +354,7 @@ bool SyntaxAnalyzer::inputstmt(){
     if (*tokitr == "s_lparen"){
         tokitr++; lexitr++;
         if (*tokitr == "t_id"){
+        	//decvars()?
             tokitr++; lexitr++;
             if (*tokitr == "s_rparen"){
                 tokitr++; lexitr++;
@@ -438,6 +440,7 @@ bool SyntaxAnalyzer::term(){
     if ((*tokitr == "t_int")
 	|| (*tokitr == "t_str")
 	|| (*tokitr == "t_id")){
+    	//decvars()
     	tokitr++; lexitr++;
     	return true;
     }
@@ -514,6 +517,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 
 
 int main(){
+	cout << "here" << endl;
     ifstream infile("codelexemes1.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
