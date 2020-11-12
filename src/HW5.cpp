@@ -295,6 +295,23 @@ bool SyntaxAnalyzer::elsepart(){
 //WHILESTMT -> while (EXPR) loop STMTLIST end loop
 // Luis Gonzalez
 bool SyntaxAnalyzer::whilestmt(){
+	if (*tokitr == "t_while"){
+		tokitr++; lexitr++;
+		if (exp()){
+			if (*tokitr == "t_loop"){
+				tokitr++; lexitr++;
+				if (stmtlist()){
+					if (*tokitr == "t_end"){
+						tokitr++; lexitr++;
+						if (*tokitr == "t_loop"){
+							tokitr++; lexitr++;
+							return true
+						}
+					}
+				}
+			}
+		}
+	}
 	return true;
 	// write this function
 }
@@ -308,13 +325,10 @@ bool SyntaxAnalyzer::assignstmt(){
 			if(expr()){
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
 					tokitr++; lexitr++;
-
-
 					return true;
 				}
 			}
 		}
-
 	}
 	return false;
 }
@@ -369,23 +383,34 @@ bool SyntaxAnalyzer::outputstmt(){
 //EXPR -> SIMPLEEXPR [LOGICOP SIMPLEEXPR]
 bool SyntaxAnalyzer::expr(){
     if (simpleexpr()){
-	if (logicop()){
-		if (simpleexpr())
-			return true;
+		if (logicop()){
+			if (simpleexpr())
+				return true;
+			else
+				return false;
+		}
 		else
-			return false;
-	}
-	else
-		return true;
+			return true;
     }
     else{
-	return false;
+    	return false;
     }
 }
 
 //SIMPLEEXPR -> TERM [ARITHOP | RELOP TERM]
 // Luis Gonzalez
 bool SyntaxAnalyzer::simpleexpr(){
+	if (term()){
+		if (arith()){
+			return true;
+		}
+		else if (relop()){
+			if (term()){
+				return true;
+			}
+		}
+		else return false;
+	}
 	return true;
     // write this function
 }
