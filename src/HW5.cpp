@@ -187,7 +187,7 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
     }
     return result;
 }
-
+//TaCoya
 //pre: user passes in variable and the token of the data being assigned to it
 //post: returns true/false if variable has been declared and type is correct
 bool SyntaxAnalyzer::decVars(string var, string tok){
@@ -200,6 +200,7 @@ bool SyntaxAnalyzer::decVars(string var, string tok){
 			}
 		}
 	}
+	cout << "variable undeclared" << endl;
 	return false;//undeclared var
 }
 //STMTLIST -> STMT {STMT} | 0
@@ -230,8 +231,8 @@ int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
         else return 0;
     }
     else if (*tokitr == "t_id"){  // assignment starts with identifier
-        tokitr++; lexitr++;
-        cout << "t_id" << endl;
+        //tokitr++; lexitr++;
+        //cout << "t_id" << endl;
         //if (assignstmt()) return 1;
         if (tokitr!=tokens.end() && assignstmt()) return 1;//modified-TH
         else return 0;
@@ -297,7 +298,7 @@ bool SyntaxAnalyzer::elsepart(){
 bool SyntaxAnalyzer::whilestmt(){
 	if (*tokitr == "t_while"){
 		tokitr++; lexitr++;
-		if (exp()){
+		if (expr()){
 			if (*tokitr == "t_loop"){
 				tokitr++; lexitr++;
 				if (stmtlist()){
@@ -305,7 +306,7 @@ bool SyntaxAnalyzer::whilestmt(){
 						tokitr++; lexitr++;
 						if (*tokitr == "t_loop"){
 							tokitr++; lexitr++;
-							return true
+							return true;
 						}
 					}
 				}
@@ -316,13 +317,22 @@ bool SyntaxAnalyzer::whilestmt(){
 	// write this function
 }
 
+//Miguel
 //ASSIGNSTMT -> id = EXPR ;
 bool SyntaxAnalyzer::assignstmt(){
+	cout << "*assignstmt method" << endl;
+	cout << *tokitr << endl;
 	if(tokitr != tokens.end() && *tokitr == "t_id"){
+		string variable = *lexitr;
+		//cout << variable << endl;
 		tokitr++; lexitr++;
 		if(tokitr != tokens.end() && *tokitr == "s_assign"){
+			cout << *tokitr << endl;
 			tokitr++; lexitr++;
+			string valueType = *tokitr;
+			//cout << valueType << endl;
 			if(expr()){
+				cout << *tokitr << endl;
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
 					tokitr++; lexitr++;
 					return true;
@@ -400,8 +410,9 @@ bool SyntaxAnalyzer::expr(){
 //SIMPLEEXPR -> TERM [ARITHOP | RELOP TERM]
 // Luis Gonzalez
 bool SyntaxAnalyzer::simpleexpr(){
+	cout << "*simpleexpr" << endl;
 	if (term()){
-		if (arith()){
+		if (arithop()){
 			return true;
 		}
 		else if (relop()){
@@ -417,6 +428,8 @@ bool SyntaxAnalyzer::simpleexpr(){
 
 //TERM -> int | str | id | (EXPR)
 bool SyntaxAnalyzer::term(){
+	cout << "*term method" << endl;
+	cout << *tokitr << endl;
     if ((*tokitr == "t_int")
 	|| (*tokitr == "t_str")
 	|| (*tokitr == "t_id")){
@@ -424,9 +437,11 @@ bool SyntaxAnalyzer::term(){
     	return true;
     }
     else
+    	cout << *tokitr << endl;
         if (*tokitr == "s_lparen"){
             tokitr++; lexitr++;
             if (expr())
+            	cout << *tokitr << endl;
                 if (*tokitr == "s_rparen"){
                     tokitr++; lexitr++;
                     return true;
@@ -445,25 +460,31 @@ bool SyntaxAnalyzer::logicop(){
         return false;
 }
 
-//RELOP -> == | < | <= | > | >= | !=
+//ARITHOP -> + | - | * | / | %
 bool SyntaxAnalyzer::arithop(){
+	cout << "*arithop method" << endl;
+	cout << *tokitr << endl;
     if ((*tokitr == "s_mult") || (*tokitr == "s_plus") || (*tokitr == "s_minus")
         || (*tokitr == "s_div")	|| (*tokitr == "s_mod")){
         tokitr++; lexitr++;
         return true;
     }
     else
+    	cout << "false" << endl;
         return false;
 }
 
-//ARITHOP -> + | - | * | / | %
+//RELOP -> == | < | <= | > | >= | !=
 bool SyntaxAnalyzer::relop(){
+	cout << "in relop" << endl;
+	cout << *tokitr << endl;
     if ((*tokitr == "s_lt") || (*tokitr == "s_gt") || (*tokitr == "s_ge")
         || (*tokitr == "s_eq") || (*tokitr == "s_ne") || (*tokitr == "s_le")){
         tokitr++; lexitr++;
         return true;
     }
     else
+    	cout << "false" << endl;
     	return false;
 }
 
@@ -487,7 +508,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 
 
 int main(){
-    ifstream infile("codelexemes.txt");
+    ifstream infile("codelexemes1.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
