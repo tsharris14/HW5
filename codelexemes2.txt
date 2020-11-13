@@ -9,12 +9,10 @@ t_main:main
 t_id:x
 s_assign:=
 t_id:5
-s_eq:==
 s_semi:;
 t_id:y
 s_assign:=
 t_int:8
-s_eq:==
 s_semi:;
 t_end:end
 

@@ -197,14 +197,41 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
 //post: returns true/false if variable has been declared and type is correct
 bool SyntaxAnalyzer::decVars(string var, string tok){
 	for (int i = 0; i < declaredVars.size(); i++){
-		if (declaredVars[i] == var){
+		if (declaredVars[i] == var){//if variable is found in vector of declared variables
 			cout << "variable was declared" <<endl;
-			if (declaredVars[i+1] == tok){
+			cout << tok << endl;
+			cout << declaredVars[i-1] << endl;
+			if (tok == "t_int"){
+				if (declaredVars[i-1] == "t_integer"){//if variable type matches data type
+
+					cout << "type is correct" <<endl;
+					return true;
+					}
+			}
+			if (tok == "t_str"){
+				if (declaredVars[i-1] == "t_string"){//if variable type matches data type
+					cout << "type is correct" <<endl;
+					return true;
+				}
+			}
+			else{
+				cout<<"false" << endl;
+				return false;
+			}
+		}
+
+	}
+
+
+		/*if (declaredVars[i] == var){//if variable is found in vector of declared variables
+			cout << "variable was declared" <<endl;
+			if (declaredVars[i+1] == tok){ //if the token of the assignment matches the type of the variable
 				cout << "correct type" <<endl;
 				return true;//variable declared and correct type
 			}
 		}
-	}
+	}*/
+
 	cout << "variable undeclared" << endl;
 	return false;//undeclared var
 }
@@ -329,13 +356,13 @@ bool SyntaxAnalyzer::assignstmt(){
 	cout << *tokitr << endl;
 	if(tokitr != tokens.end() && *tokitr == "t_id"){
 		string variable = *lexitr;
-		//cout << variable << endl;
+		cout << variable << endl;//x
 		tokitr++; lexitr++;
 		if(tokitr != tokens.end() && *tokitr == "s_assign"){
-			cout << *tokitr << endl;
+			cout << *tokitr << endl;//t_int
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
-			//cout << valueType << endl;
+			cout << valueType << endl;
 			decVars(variable, valueType);
 			if(expr()){
 				cout << *tokitr << endl;
