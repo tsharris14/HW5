@@ -194,6 +194,7 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
 }
 //TaCoya
 //pre: user passes in variable and the token of the data being assigned to it
+//     if no assignment is being made, user passes in null for tok
 //post: returns true/false if variable has been declared and type is correct
 bool SyntaxAnalyzer::decVars(string var, string tok){
 	for (int i = 0; i < declaredVars.size(); i++){
@@ -201,6 +202,10 @@ bool SyntaxAnalyzer::decVars(string var, string tok){
 			cout << "variable was declared" <<endl;
 			cout << tok << endl;
 			cout << declaredVars[i-1] << endl;
+			if (tok == "null"){
+				cout << "no assignment" <<endl;
+				return true; //no assignment being made
+			}
 			if (tok == "t_int"){
 				if (declaredVars[i-1] == "t_integer"){//if variable type matches data type
 
@@ -224,6 +229,7 @@ bool SyntaxAnalyzer::decVars(string var, string tok){
 	cout << "variable undeclared" << endl;
 	return false;//undeclared var
 }
+
 //STMTLIST -> STMT {STMT} | 0
 bool SyntaxAnalyzer::stmtlist(){
     int result = stmt();
@@ -370,12 +376,17 @@ bool SyntaxAnalyzer::inputstmt(){
     if (*tokitr == "s_lparen"){
         tokitr++; lexitr++;
         if (*tokitr == "t_id"){
-        	//decvars()?
-            tokitr++; lexitr++;
-            if (*tokitr == "s_rparen"){
-                tokitr++; lexitr++;
-                return true;
-            }
+        	string variable = *tokitr;
+        	if (decVars(variable, "null")){ //variable declaration check -TH
+        		return false; //undeclared variable -TH
+        	}
+        	else{
+				tokitr++; lexitr++;
+				if (*tokitr == "s_rparen"){
+					tokitr++; lexitr++;
+					return true;
+				}
+        	}
         }
     }
     return false;
