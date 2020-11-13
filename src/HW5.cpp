@@ -203,7 +203,6 @@ bool SyntaxAnalyzer::decVars(string var, string tok){
 			cout << tok << endl;
 			cout << declaredVars[i-1] << endl;
 			if (tok == "null"){
-				cout << "no assignment" <<endl;
 				return true; //no assignment being made
 			}
 			if (tok == "t_int"){
@@ -376,7 +375,7 @@ bool SyntaxAnalyzer::inputstmt(){
     if (*tokitr == "s_lparen"){
         tokitr++; lexitr++;
         if (*tokitr == "t_id"){
-        	string variable = *tokitr;
+        	string variable = *lexitr;
         	if (decVars(variable, "null")){ //variable declaration check -TH
         		return false; //undeclared variable -TH
         	}
@@ -544,7 +543,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 
 
 int main(){
-    ifstream infile("codelexemes2.txt");
+    ifstream infile("codelexemes3.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
