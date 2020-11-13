@@ -221,17 +221,6 @@ bool SyntaxAnalyzer::decVars(string var, string tok){
 		}
 
 	}
-
-
-		/*if (declaredVars[i] == var){//if variable is found in vector of declared variables
-			cout << "variable was declared" <<endl;
-			if (declaredVars[i+1] == tok){ //if the token of the assignment matches the type of the variable
-				cout << "correct type" <<endl;
-				return true;//variable declared and correct type
-			}
-		}
-	}*/
-
 	cout << "variable undeclared" << endl;
 	return false;//undeclared var
 }
@@ -544,8 +533,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 
 
 int main(){
-	cout << "here" << endl;
-    ifstream infile("codelexemes1.txt");
+    ifstream infile("codelexemes2.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
