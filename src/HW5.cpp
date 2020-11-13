@@ -86,6 +86,7 @@ SyntaxAnalyzer::SyntaxAnalyzer(istream& infile){
 }
 
 bool SyntaxAnalyzer::parse(){
+	cout << "==============================="<<endl;
 	cout<<"*parse() method"<<endl;
     if (vdec()){
     	cout<<*tokitr<<endl;
@@ -257,9 +258,10 @@ int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
         else return 0;
     }
     else if (*tokitr == "t_id"){  // assignment starts with identifier
-        //tokitr++; lexitr++;
-        //cout << "t_id" << endl;
-        //if (assignstmt()) return 1;
+    	string variable = *lexitr;
+    	if (decVars(variable, "null")){ //declaration check -TH
+    		return 0; //undeclared variable
+    	}
         if (tokitr!=tokens.end() && assignstmt()) return 1;//modified-TH
         else return 0;
     }
