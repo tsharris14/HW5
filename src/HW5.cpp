@@ -336,7 +336,12 @@ bool SyntaxAnalyzer::assignstmt(){
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
 			//cout << valueType << endl;
-			decVars(variable, valueType);
+			if(decVars(variable, valueType) == false){
+				return false;
+			}
+			else{
+				return true;
+			}
 			if(expr()){
 				cout << *tokitr << endl;
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
