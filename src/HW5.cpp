@@ -86,6 +86,7 @@ SyntaxAnalyzer::SyntaxAnalyzer(istream& infile){
 }
 
 bool SyntaxAnalyzer::parse(){
+	cout << "==============================="<<endl;
 	cout<<"*parse() method"<<endl;
     if (vdec()){
     	cout<<*tokitr<<endl;
@@ -194,20 +195,41 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
 }
 //TaCoya
 //pre: user passes in variable and the token of the data being assigned to it
+//     if no assignment is being made, user passes in null for tok
 //post: returns true/false if variable has been declared and type is correct
 bool SyntaxAnalyzer::decVars(string var, string tok){
 	for (int i = 0; i < declaredVars.size(); i++){
-		if (declaredVars[i] == var){
+		if (declaredVars[i] == var){//if variable is found in vector of declared variables
 			cout << "variable was declared" <<endl;
-			if (declaredVars[i+1] == tok){
-				cout << "correct type" <<endl;
-				return true;//variable declared and correct type
+			cout << tok << endl;
+			cout << declaredVars[i-1] << endl;
+			if (tok == "null"){
+				return true; //no assignment being made
+			}
+			if (tok == "t_int"){
+				if (declaredVars[i-1] == "t_integer"){//if variable type matches data type
+
+					cout << "type is correct" <<endl;
+					return true;
+					}
+			}
+			if (tok == "t_str"){
+				if (declaredVars[i-1] == "t_string"){//if variable type matches data type
+					cout << "type is correct" <<endl;
+					return true;
+				}
+			}
+			else{
+				cout<<"false" << endl;
+				return false;
 			}
 		}
+
 	}
 	cout << "variable undeclared" << endl;
 	return false;//undeclared var
 }
+
 //STMTLIST -> STMT {STMT} | 0
 bool SyntaxAnalyzer::stmtlist(){
     int result = stmt();
@@ -236,9 +258,10 @@ int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
         else return 0;
     }
     else if (*tokitr == "t_id"){  // assignment starts with identifier
-        //tokitr++; lexitr++;
-        //cout << "t_id" << endl;
-        //if (assignstmt()) return 1;
+    	string variable = *lexitr;
+    	if (decVars(variable, "null")){ //declaration check -TH
+    		return 0; //undeclared variable
+    	}
         if (tokitr!=tokens.end() && assignstmt()) return 1;//modified-TH
         else return 0;
     }
@@ -329,12 +352,13 @@ bool SyntaxAnalyzer::assignstmt(){
 	cout << *tokitr << endl;
 	if(tokitr != tokens.end() && *tokitr == "t_id"){
 		string variable = *lexitr;
-		//cout << variable << endl;
+		cout << variable << endl;//x
 		tokitr++; lexitr++;
 		if(tokitr != tokens.end() && *tokitr == "s_assign"){
-			cout << *tokitr << endl;
+			cout << *tokitr << endl;//t_int
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
+<<<<<<< HEAD
 			//cout << valueType << endl;
 			if(decVars(variable, valueType) == false){
 				return false;
@@ -342,6 +366,10 @@ bool SyntaxAnalyzer::assignstmt(){
 			else{
 				return true;
 			}
+=======
+			cout << valueType << endl;
+			decVars(variable, valueType);
+>>>>>>> 47c80e49cc0afe311b642fe11b61ec7713018a58
 			if(expr()){
 				cout << *tokitr << endl;
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
@@ -359,12 +387,17 @@ bool SyntaxAnalyzer::inputstmt(){
     if (*tokitr == "s_lparen"){
         tokitr++; lexitr++;
         if (*tokitr == "t_id"){
-        	//decvars()?
-            tokitr++; lexitr++;
-            if (*tokitr == "s_rparen"){
-                tokitr++; lexitr++;
-                return true;
-            }
+        	string variable = *lexitr;
+        	if (decVars(variable, "null")){ //variable declaration check -TH
+        		return false; //undeclared variable -TH
+        	}
+        	else{
+				tokitr++; lexitr++;
+				if (*tokitr == "s_rparen"){
+					tokitr++; lexitr++;
+					return true;
+				}
+        	}
         }
     }
     return false;
@@ -522,8 +555,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 
 
 int main(){
-	cout << "here" << endl;
-    ifstream infile("codelexemes1.txt");
+    ifstream infile("codelexemes3.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
