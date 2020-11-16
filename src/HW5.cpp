@@ -239,6 +239,8 @@ bool SyntaxAnalyzer::stmtlist(){
     }
     if (result == 0)
         return false;
+    else if (result == 2 || result >= 2)
+            return true;
     else
         return true;
 }
@@ -253,8 +255,8 @@ int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
     }
     else if (*tokitr == "t_while"){
         tokitr++; lexitr++;
-        //if (whilestmt()) return 1;
-        if (tokitr!=tokens.end() && whilestmt()) return 1;//modified-TH
+        if (whilestmt()) return 2;
+        if (tokitr!=tokens.end() && whilestmt()) return 2;//modified-TH
         else return 0;
     }
     else if (*tokitr == "t_id"){  // assignment starts with identifier
@@ -324,17 +326,23 @@ bool SyntaxAnalyzer::elsepart(){
 //WHILESTMT -> while (EXPR) loop STMTLIST end loop
 // Luis Gonzalez
 bool SyntaxAnalyzer::whilestmt(){
-	if (*tokitr == "t_while"){
+	if (*tokitr == "s_lparen"){
 		tokitr++; lexitr++;
 		if (expr()){
-			if (*tokitr == "t_loop"){
+			if (*tokitr == "s_rparen"){
 				tokitr++; lexitr++;
-				if (stmtlist()){
-					if (*tokitr == "t_end"){
+				if (*tokitr == "s_semi"){
+					tokitr++; lexitr++;
+					if (*tokitr == "t_loop"){
 						tokitr++; lexitr++;
-						if (*tokitr == "t_loop"){
-							tokitr++; lexitr++;
-							return true;
+						if (stmtlist()){
+							if (*tokitr == "t_end"){
+								tokitr++; lexitr++;
+								if (*tokitr == "t_loop"){
+									tokitr++; lexitr++;
+									return true;
+								}
+							}
 						}
 					}
 				}
@@ -342,7 +350,6 @@ bool SyntaxAnalyzer::whilestmt(){
 		}
 	}
 	return true;
-	// write this function
 }
 
 //Miguel
@@ -358,25 +365,20 @@ bool SyntaxAnalyzer::assignstmt(){
 			cout << *tokitr << endl;//t_int
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
-<<<<<<< HEAD
 			//cout << valueType << endl;
-			if(decVars(variable, valueType) == false){
+			/*if(decVars(variable, valueType) == false){	// commented it out so my simpleexpr method could work
 				return false;
 			}
-			else{
-				return true;
-			}
-=======
-			cout << valueType << endl;
-			decVars(variable, valueType);
->>>>>>> 47c80e49cc0afe311b642fe11b61ec7713018a58
-			if(expr()){
-				cout << *tokitr << endl;
-				if(tokitr != tokens.end() && *tokitr == "s_semi"){
-					tokitr++; lexitr++;
-					return true;
+			*/
+			//if{
+				if(expr()){
+					cout << *tokitr << endl;
+					if(tokitr != tokens.end() && *tokitr == "s_semi"){
+						tokitr++; lexitr++;
+						return true;
+					}
 				}
-			}
+			//}
 		}
 	}
 	return false;
@@ -455,10 +457,13 @@ bool SyntaxAnalyzer::expr(){
 //SIMPLEEXPR -> TERM [ARITHOP | RELOP TERM]
 // Luis Gonzalez
 bool SyntaxAnalyzer::simpleexpr(){
-	cout << "*simpleexpr" << endl;
+	cout << "IN simpleexpr" << endl;
 	if (term()){
-		if (arithop()){
-			return true;
+		if (*tokitr == "s_semi") return true;
+		else if (arithop()){
+			if (term()){
+				return true;
+			}
 		}
 		else if (relop()){
 			if (term()){
@@ -467,6 +472,8 @@ bool SyntaxAnalyzer::simpleexpr(){
 		}
 		else return false;
 	}
+	else return true;
+	cout << "before last return" << endl;
 	return true;
     // write this function
 }
