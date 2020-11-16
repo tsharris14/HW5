@@ -1,0 +1,10 @@
+t_var:var
+t_integer:integer
+t_id:x
+s_semi:;
+t_main:main
+t_input:input
+s_lparen:(
+t_id:x
+s_rparen:)
+t_end:end
