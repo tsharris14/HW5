@@ -413,32 +413,18 @@ bool SyntaxAnalyzer::inputstmt(){
 
 //OUTPUTSTMT -> output (EXPR) | output (string)
 bool SyntaxAnalyzer::outputstmt(){
-<<<<<<< HEAD
-		if(tokitr != tokens.end() && *tokitr == "s_lparen"){
-			tokitr++; lexitr++;
-			if(expr()){
-				if(tokitr != tokens.end() && *tokitr == "s_rparen"){
-=======
 	if(tokitr != tokens.end() && *tokitr == "s_lparen"){
 		tokitr++; lexitr++;
 		if(expr()){
 			if(tokitr != tokens.end() && *tokitr == "s_rparen"){
 				tokitr++; lexitr++;
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
->>>>>>> f9bf383b25f4d2f4824d84c6b254ba24c1a93393
 					tokitr++; lexitr++;
 					return true;
 				}
 			}
 		}
-<<<<<<< HEAD
-
-	else if(tokitr != tokens.end() && *tokitr == "t_output"){
-		tokitr++; lexitr++;
-		if(tokitr != tokens.end() && *tokitr == "s_lparen"){
-=======
 		else if(tokitr != tokens.end() && *tokitr == "t_str"){
->>>>>>> f9bf383b25f4d2f4824d84c6b254ba24c1a93393
 			tokitr++; lexitr++;
 			if(tokitr != tokens.end() && *tokitr == "s_rparen"){
 				tokitr++; lexitr++;
@@ -446,7 +432,6 @@ bool SyntaxAnalyzer::outputstmt(){
 		}
 	}
 }
-
 //EXPR -> SIMPLEEXPR [LOGICOP SIMPLEEXPR]
 bool SyntaxAnalyzer::expr(){
     if (simpleexpr()){
