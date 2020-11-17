@@ -216,14 +216,14 @@ bool SyntaxAnalyzer::declaredCheck(string variable){
 //pre: user passes in variable/identifier and the token of the data type being assigned to it
 //post: returns true/false if data type of assignment matches data type of declared variable
 bool SyntaxAnalyzer::typeCheck(string variable, string dataType){
-	cout << "*typeCheck method" << endl;
+	cout << "typeCheck method" << endl;
 	cout << variable << endl;
 	cout << dataType << endl;
 	string varType;
 	varType = symboltable[variable];//declared variable type
 	cout << varType << endl;
 
-	if (dataType == "t_int"){
+	if (varType == "t_integer"){
 		if (varType == "t_integer"){
 			cout << "type is correct" <<endl;
 			return true;
@@ -233,7 +233,7 @@ bool SyntaxAnalyzer::typeCheck(string variable, string dataType){
 			return false;
 		}
 	}
-	if (dataType == "t_str"){
+	if (varType == "t_string "){
 		if (varType == "t_string"){
 			cout << "type is correct" <<endl;
 			return true;
@@ -441,6 +441,7 @@ bool SyntaxAnalyzer::outputstmt(){
 			}
 		}
 	}
+	return false;
 }
 //EXPR -> SIMPLEEXPR [LOGICOP SIMPLEEXPR]
 bool SyntaxAnalyzer::expr(){
@@ -487,32 +488,34 @@ bool SyntaxAnalyzer::simpleexpr(){
 bool SyntaxAnalyzer::term(){
 	cout << "*term method" << endl;
 	cout << *tokitr << endl;
-	if ((*tokitr == "t_int")
-		|| (*tokitr == "t_str")
-		|| (*tokitr == "t_id")){
-	    	tokitr++; lexitr++;
-	    	return true;
-	    }
-	    else
-	        if (*tokitr == "s_lparen"){
-	            tokitr++; lexitr++;
-	            if (expr())
-	                if (*tokitr == "s_rparen"){
-	                    tokitr++; lexitr++;
-	                    return true;
-	                }
-	        }
-	    return false;
-}
-
-//LOGICOP -> && | ||
-bool SyntaxAnalyzer::logicop(){
-    if ((*tokitr == "s_and") || (*tokitr == "s_or")){
-        tokitr++; lexitr++;
-        return true;
+    if ((*tokitr == "t_int") || (*tokitr == "t_str")){
+    	tokitr++; lexitr++;
+    	return true;
+    }
+    //modified -TH
+    else if((*tokitr == "t_id")){
+    	//tokitr++; lexitr++;
+    	string variable = *lexitr;
+    	if(typeCheck(variable, *tokitr)==false){
+    		return false;
+    	}
+    	else{
+			tokitr++; lexitr++;
+			return true;
+    	}
     }
     else
-        return false;
+    	cout << *tokitr << endl;
+        if (*tokitr == "s_lparen"){
+            tokitr++; lexitr++;
+            if (expr())
+            	cout << *tokitr << endl;
+                if (*tokitr == "s_rparen"){
+                    tokitr++; lexitr++;
+                    return true;
+                }
+        }
+    return false;
 }
 
 //ARITHOP -> + | - | * | / | %
