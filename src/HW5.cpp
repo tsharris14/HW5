@@ -43,9 +43,8 @@ class SyntaxAnalyzer{
         bool logicop();
         bool arithop();
         bool relop();
-        bool decVars(string var, string tok);//returns true/false if var has been declared and has correct type
-        bool declaredCheck(string variable);
-        bool typeCheck(string variable, string dataType);
+        bool declaredCheck(string variable); //added -TH
+        bool typeCheck(string variable, string dataType);//added -TH
         std::istream& getline_safe(std::istream& input, std::string& output);
     public:
         SyntaxAnalyzer(istream& infile);
@@ -61,12 +60,6 @@ class SyntaxAnalyzer{
         // that caused the error.  If no error occurs, the symboltable contains all
         // variables and datatypes.
 
-        /*void print(){
-        	cout<< "declared variables" << endl;
-        	for (int i = 0; i <declaredVars.size();i++){
-        		cout <<declaredVars[i] <<endl;
-        	}
-        }*/
 
 };
 SyntaxAnalyzer::SyntaxAnalyzer(istream& infile){
@@ -434,39 +427,22 @@ bool SyntaxAnalyzer::inputstmt(){
 //Miguel
 //OUTPUTSTMT -> output (EXPR) | output (string)
 bool SyntaxAnalyzer::outputstmt(){
-	cout << "*outputstmt method" << endl;
-	cout << *tokitr << endl;
-	if(tokitr != tokens.end() && *tokitr == "t_output"){
+	if(tokitr != tokens.end() && *tokitr == "s_lparen"){
 		tokitr++; lexitr++;
-		cout << *tokitr << endl;
-		if(tokitr != tokens.end() && *tokitr == "s_lparen"){
-			tokitr++; lexitr++;
-			if(expr()){
-				if(tokitr != tokens.end() && *tokitr == "s_rparen"){
-					tokitr++; lexitr++;
-					return true;
-
-				}
-			}
-		}
-		return false;
-
-	}
-	else if(tokitr != tokens.end() && *tokitr == "t_output"){
-		tokitr++; lexitr++;
-		if(tokitr != tokens.end() && *tokitr == "s_lparen"){
-			tokitr++; lexitr++;
-			if(tokitr != tokens.end() && *tokitr == "t_str"){
+		if(expr()){
+			if(tokitr != tokens.end() && *tokitr == "s_rparen"){
 				tokitr++; lexitr++;
-				if(tokitr != tokens.end() && *tokitr == "s_rparen"){
-					tokitr++; lexitr++;
-				}
+				return true;
+			}
+		}
+		else if(tokitr != tokens.end() && *tokitr == "t_str"){
+			tokitr++; lexitr++;
+			if(tokitr != tokens.end() && *tokitr == "s_rparen"){
+				tokitr++; lexitr++;
 			}
 		}
 	}
-	return false;
 }
-
 //EXPR -> SIMPLEEXPR [LOGICOP SIMPLEEXPR]
 bool SyntaxAnalyzer::expr(){
     if (simpleexpr()){
@@ -516,7 +492,9 @@ bool SyntaxAnalyzer::term(){
     	tokitr++; lexitr++;
     	return true;
     }
-    else if((*tokitr == "t_id")){ //modified -TH
+    //modified -TH
+    else if((*tokitr == "t_id")){
+    	tokitr++; lexitr++;
     	string variable = *tokitr;
     	if(declaredCheck(variable)==false){
     		return false;
@@ -598,7 +576,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-    ifstream infile("codelexemes1.txt");
+    ifstream infile("codelexemes2.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
