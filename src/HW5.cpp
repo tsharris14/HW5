@@ -358,7 +358,6 @@ bool SyntaxAnalyzer::assignstmt(){
 			cout << *tokitr << endl;//t_int
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
-<<<<<<< HEAD
 			//cout << valueType << endl;
 			if(decVars(variable, valueType) == false){
 				return false;
@@ -366,10 +365,8 @@ bool SyntaxAnalyzer::assignstmt(){
 			else{
 				return true;
 			}
-=======
 			cout << valueType << endl;
 			decVars(variable, valueType);
->>>>>>> 47c80e49cc0afe311b642fe11b61ec7713018a58
 			if(expr()){
 				cout << *tokitr << endl;
 				if(tokitr != tokens.end() && *tokitr == "s_semi"){
