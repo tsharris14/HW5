@@ -598,18 +598,14 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-<<<<<<< HEAD
-    ifstream infile("codelexemes.txt");
-=======
     ifstream infile("codelexemes1.txt");
->>>>>>> b761a43d8fb1934da112c17bc1c93843dbc163d7
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
     }
     SyntaxAnalyzer sa(infile);
     sa.parse();
-
+    // would this change??
     //sa.print();
 
     return 1;
