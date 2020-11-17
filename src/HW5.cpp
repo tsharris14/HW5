@@ -518,6 +518,15 @@ bool SyntaxAnalyzer::term(){
     return false;
 }
 
+bool SyntaxAnalyzer::logicop(){
+    if ((*tokitr == "s_and") || (*tokitr == "s_or")){
+        tokitr++; lexitr++;
+        return true;
+    }
+    else
+        return false;
+}
+
 //ARITHOP -> + | - | * | / | %
 bool SyntaxAnalyzer::arithop(){
 	cout << "*arithop method" << endl;
@@ -566,7 +575,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-    ifstream infile("codelexemes3.txt");
+    ifstream infile("codelexemes4.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
