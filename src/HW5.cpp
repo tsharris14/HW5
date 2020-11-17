@@ -413,30 +413,38 @@ bool SyntaxAnalyzer::inputstmt(){
 
 //OUTPUTSTMT -> output (EXPR) | output (string)
 bool SyntaxAnalyzer::outputstmt(){
+<<<<<<< HEAD
 		if(tokitr != tokens.end() && *tokitr == "s_lparen"){
 			tokitr++; lexitr++;
 			if(expr()){
 				if(tokitr != tokens.end() && *tokitr == "s_rparen"){
+=======
+	if(tokitr != tokens.end() && *tokitr == "s_lparen"){
+		tokitr++; lexitr++;
+		if(expr()){
+			if(tokitr != tokens.end() && *tokitr == "s_rparen"){
+				tokitr++; lexitr++;
+				if(tokitr != tokens.end() && *tokitr == "s_semi"){
+>>>>>>> f9bf383b25f4d2f4824d84c6b254ba24c1a93393
 					tokitr++; lexitr++;
 					return true;
-
 				}
 			}
 		}
+<<<<<<< HEAD
 
 	else if(tokitr != tokens.end() && *tokitr == "t_output"){
 		tokitr++; lexitr++;
 		if(tokitr != tokens.end() && *tokitr == "s_lparen"){
+=======
+		else if(tokitr != tokens.end() && *tokitr == "t_str"){
+>>>>>>> f9bf383b25f4d2f4824d84c6b254ba24c1a93393
 			tokitr++; lexitr++;
-			if(tokitr != tokens.end() && *tokitr == "t_str"){
+			if(tokitr != tokens.end() && *tokitr == "s_rparen"){
 				tokitr++; lexitr++;
-				if(tokitr != tokens.end() && *tokitr == "s_rparen"){
-					tokitr++; lexitr++;
-				}
 			}
 		}
 	}
-	return false;
 }
 
 //EXPR -> SIMPLEEXPR [LOGICOP SIMPLEEXPR]
@@ -461,6 +469,8 @@ bool SyntaxAnalyzer::expr(){
 bool SyntaxAnalyzer::simpleexpr(){
 	cout << "IN simpleexpr" << endl;
 	if (term()){
+		return true;
+		/*
 		if (*tokitr == "s_semi") return true;
 		else if (arithop()){
 			if (term()){
@@ -473,8 +483,10 @@ bool SyntaxAnalyzer::simpleexpr(){
 			}
 		}
 		else return false;
+		*/
 	}
-	else return true;
+
+	//  else return true;
 	cout << "before last return" << endl;
 	return true;
     // write this function
@@ -517,7 +529,7 @@ bool SyntaxAnalyzer::logicop(){
 
 //ARITHOP -> + | - | * | / | %
 bool SyntaxAnalyzer::arithop(){
-	cout << "*arithop method" << endl;
+	cout << "arithop method" << endl;
 	cout << *tokitr << endl;
     if ((*tokitr == "s_mult") || (*tokitr == "s_plus") || (*tokitr == "s_minus")
         || (*tokitr == "s_div")	|| (*tokitr == "s_mod")){
