@@ -599,7 +599,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-    ifstream infile("codelexemes5.txt");
+    ifstream infile("codelexemes.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
