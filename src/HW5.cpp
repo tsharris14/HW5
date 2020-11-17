@@ -223,7 +223,7 @@ bool SyntaxAnalyzer::typeCheck(string variable, string dataType){
 	varType = symboltable[variable];//declared variable type
 	cout << varType << endl;
 
-	if (varType == "t_integer"){
+	if (dataType == "t_int"){
 		if (varType == "t_integer"){
 			cout << "type is correct" <<endl;
 			return true;
@@ -233,7 +233,7 @@ bool SyntaxAnalyzer::typeCheck(string variable, string dataType){
 			return false;
 		}
 	}
-	if (varType == "t_string "){
+	if (dataType == "t_str"){
 		if (varType == "t_string"){
 			cout << "type is correct" <<endl;
 			return true;
@@ -381,9 +381,9 @@ bool SyntaxAnalyzer::assignstmt(){
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
 			//cout << valueType << endl;
-			/*if(typeCheck(variable, valueType) == false){	// commented it out so my simpleexpr method could work
+			if(typeCheck(variable, valueType) == false){	// commented it out so my simpleexpr method could work
 				return false;
-			}*/
+			}
 
 			//if{
 				if(expr()){
@@ -484,6 +484,16 @@ bool SyntaxAnalyzer::simpleexpr(){
 	return true;
 }
 
+bool SyntaxAnalyzer::logicop(){
+    if ((*tokitr == "s_and") || (*tokitr == "s_or")){
+        tokitr++; lexitr++;
+        return true;
+    }
+    else
+        return false;
+}
+
+
 //TERM -> int | str | id | (EXPR)
 bool SyntaxAnalyzer::term(){
 	cout << "*term method" << endl;
@@ -566,14 +576,13 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-    ifstream infile("codelexemes3.txt");
+    ifstream infile("codelexemes5.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
     }
     SyntaxAnalyzer sa(infile);
     sa.parse();
-    // would this change??
     //sa.print();
 
     return 1;

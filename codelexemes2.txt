@@ -7,7 +7,7 @@ s_semi:;
 t_main:main
 t_id:x
 s_assign:=
-t_id:5
+t_int:5
 s_semi:;
 t_id:y
 s_assign:=
