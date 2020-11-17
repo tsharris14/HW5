@@ -89,10 +89,9 @@ bool SyntaxAnalyzer::parse(){
             tokitr++; lexitr++;
             if (tokitr!=tokens.end() && stmtlist()){
             	if (tokitr!=tokens.end()){ // should be at end token
-            		//cout << *tokitr << endl;
                 	if (*tokitr == "t_end"){
                 		tokitr++; lexitr++;
-                		if (tokitr==tokens.end()){  // end was last thing in file
+                		if (tokitr==tokens.end()){  // main end
                 			cout << "Valid source code file" << endl;
                 			return true;
                 		}
@@ -505,34 +504,22 @@ bool SyntaxAnalyzer::simpleexpr(){
 bool SyntaxAnalyzer::term(){
 	cout << "*term method" << endl;
 	cout << *tokitr << endl;
-    if ((*tokitr == "t_int") || (*tokitr == "t_str")){
-    	tokitr++; lexitr++;
-    	return true;
-    }
-    //modified -TH
-    else if((*tokitr == "t_id")){
-    	tokitr++; lexitr++;
-    	string variable = *tokitr;
-    	if(declaredCheck(variable)==false){
-    		return false;
-    	}
-    	else{
-			tokitr++; lexitr++;
-			return true;
-    	}
-    }
-    else
-    	cout << *tokitr << endl;
-        if (*tokitr == "s_lparen"){
-            tokitr++; lexitr++;
-            if (expr())
-            	cout << *tokitr << endl;
-                if (*tokitr == "s_rparen"){
-                    tokitr++; lexitr++;
-                    return true;
-                }
-        }
-    return false;
+	if ((*tokitr == "t_int")
+		|| (*tokitr == "t_str")
+		|| (*tokitr == "t_id")){
+	    	tokitr++; lexitr++;
+	    	return true;
+	    }
+	    else
+	        if (*tokitr == "s_lparen"){
+	            tokitr++; lexitr++;
+	            if (expr())
+	                if (*tokitr == "s_rparen"){
+	                    tokitr++; lexitr++;
+	                    return true;
+	                }
+	        }
+	    return false;
 }
 
 //LOGICOP -> && | ||
@@ -593,7 +580,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-    ifstream infile("codelexemes2.txt");
+    ifstream infile("codelexemes3.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
