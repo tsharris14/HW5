@@ -452,11 +452,9 @@ bool SyntaxAnalyzer::expr(){
 //SIMPLEEXPR -> TERM [ARITHOP | RELOP TERM]
 // Luis Gonzalez
 bool SyntaxAnalyzer::simpleexpr(){
-	cout << "IN simpleexpr" << endl;
+	cout << "In simpleexpr" << endl;
 	if (term()){
-		return true;
-		/*
-		if (*tokitr == "s_semi") return true;
+		if (*tokitr == "s_semi" || *tokitr == "s_rparen") return true;
 		else if (arithop()){
 			if (term()){
 				return true;
@@ -468,13 +466,13 @@ bool SyntaxAnalyzer::simpleexpr(){
 			}
 		}
 		else return false;
-		*/
-	}
 
-	//  else return true;
-	cout << "before last return" << endl;
+		//  else return true;
+		cout << "before last return" << endl;
+
+		// write this function
+	}
 	return true;
-    // write this function
 }
 
 //TERM -> int | str | id | (EXPR)
