@@ -166,7 +166,6 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
     string temp,type,variable;
     if (*tokitr == "t_integer"){
         temp = "t_integer";
-        type = *tokitr;//store type -TH
         tokitr++; lexitr++;
         if (*tokitr == "t_main"){
         	result = 1;
@@ -174,7 +173,6 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
     }
     else if (*tokitr == "t_string"){
         temp = "t_string";
-        type = *tokitr;//store type -TH
         tokitr++; lexitr++;
         if (*tokitr == "t_main"){
         	result = 1;
@@ -186,15 +184,12 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
     while (tokitr != tokens.end() && result == 0 && !semihit){
         if (*tokitr == "t_id"){
             symboltable[*lexitr] = temp;
-            variable = *lexitr; //store variable -TH
             tokitr++; lexitr++;
             if (tokitr != tokens.end() && *tokitr == "s_comma"){
                 tokitr++; lexitr++;
             }
             else if (tokitr != tokens.end() && *tokitr == "s_semi"){
                 semihit = true;
-                declaredVars.push_back(type);//store type in vector
-                declaredVars.push_back(variable);//store variable in vector
                 tokitr++; lexitr++;
                 if (*tokitr == "t_main"){
                 	result = 1;
@@ -281,7 +276,6 @@ int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
 	cout << *tokitr << endl;
 	if (*tokitr == "t_if"){
         tokitr++; lexitr++;
-        //if (ifstmt()) return 1;
         if (tokitr!=tokens.end() && ifstmt()) return 1;//modified-TH
         else return 0;
     }
@@ -293,21 +287,19 @@ int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
     }
     else if (*tokitr == "t_id"){  // assignment starts with identifier
     	string variable = *lexitr;
-    	/*if (decVars(variable, "null") == false){ //declaration check -TH
+    	if ((declaredCheck(variable)) == false){ //declaration check -TH
     		return 0; //undeclared variable
-    	}*/
+    	}
         if (tokitr!=tokens.end() && assignstmt()) return 1;//modified-TH
         else return 0;
     }
     else if (*tokitr == "t_input"){
         tokitr++; lexitr++;
-        //if (inputstmt()) return 1;
         if (tokitr!=tokens.end() && inputstmt()) return 1;//modified-TH
         else return 0;
     }
     else if (*tokitr == "t_output"){
         tokitr++; lexitr++;
-        //if (outputstmt()) return 1;
         if (tokitr!=tokens.end() && outputstmt()) return 1;//modified-TH
         else return 0;
     }
@@ -344,14 +336,14 @@ bool SyntaxAnalyzer::ifstmt(){
 //ELSEPART -> else STMTLIST | 0
 bool SyntaxAnalyzer::elsepart(){
 	if (*tokitr == "t_else"){
-	        tokitr++; lexitr++;
-	        //if (stmtlist())
-	        if (tokitr!=tokens.end() && stmtlist())//modified-TH
-	            return true;
-	        else
-	            return false;
-	    }
-	    return true;   // elsepart can be null
+		tokitr++; lexitr++;
+		//if (stmtlist())
+		if (tokitr!=tokens.end() && stmtlist())//modified-TH
+			return true;
+		else
+			return false;
+		}
+		return true;   // elsepart can be null
 	}
 
 //WHILESTMT -> while (EXPR) loop STMTLIST end loop
@@ -520,11 +512,19 @@ bool SyntaxAnalyzer::simpleexpr(){
 bool SyntaxAnalyzer::term(){
 	cout << "*term method" << endl;
 	cout << *tokitr << endl;
-    if ((*tokitr == "t_int")
-	|| (*tokitr == "t_str")
-	|| (*tokitr == "t_id")){
+    if ((*tokitr == "t_int") || (*tokitr == "t_str")){
     	tokitr++; lexitr++;
     	return true;
+    }
+    else if((*tokitr == "t_id")){ //modified -TH
+    	string variable = *tokitr;
+    	if(declaredCheck(variable)==false){
+    		return false;
+    	}
+    	else{
+			tokitr++; lexitr++;
+			return true;
+    	}
     }
     else
     	cout << *tokitr << endl;
@@ -537,7 +537,6 @@ bool SyntaxAnalyzer::term(){
                     return true;
                 }
         }
-
     return false;
 }
 
@@ -599,7 +598,11 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
+<<<<<<< HEAD
     ifstream infile("codelexemes.txt");
+=======
+    ifstream infile("codelexemes1.txt");
+>>>>>>> b761a43d8fb1934da112c17bc1c93843dbc163d7
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
