@@ -5,6 +5,6 @@ s_semi:;
 t_main:main
 t_id:x
 s_assign:=
-t_int:5
+t_str:5
 s_semi:;
 t_end:end
