@@ -81,10 +81,7 @@ SyntaxAnalyzer::SyntaxAnalyzer(istream& infile){
 }
 
 bool SyntaxAnalyzer::parse(){
-	cout << "==============================="<<endl;
-	cout<<"*parse method"<<endl;
     if (vdec()){
-    	cout<<*tokitr<<endl;
         if (tokitr!=tokens.end() && *tokitr=="t_main"){
             tokitr++; lexitr++;
             if (tokitr!=tokens.end() && stmtlist()){
@@ -125,22 +122,18 @@ bool SyntaxAnalyzer::parse(){
 
 //VDEC -> var VARS {VARS} | 0
 bool SyntaxAnalyzer::vdec(){
-	cout << "vdec" << endl;
-	cout << *tokitr << endl;
     if (*tokitr != "t_var")//if not a variable
         return true;
     else{ // token is a variable
         tokitr++; lexitr++;//move to next thing
         int result = 0;// 0 - valid
         result = vars();//result =  0 - valid, 1 - done, or 2 - error
-        cout << result << endl;
         if (result == 2) //error
             return false;//not valid variable type
         while (result == 0){//while result is valid
             if (tokitr!=tokens.end())//if not at the end
             	tokitr++; lexitr++;//move to next thing
                 result = vars(); // parse vars
-            	cout << result << endl;
         }
         if (result == 1){//valid type
         	return true;//variable declared
@@ -153,7 +146,6 @@ bool SyntaxAnalyzer::vdec(){
 
 //VARS -> TYPE id {, id} ;
 int SyntaxAnalyzer::vars(){//determines if type is valid
-	cout << "*vars method" << endl;
     int result = 0;  // 0 - valid, 1 - done, 2 - error
     string temp,type,variable;
     if (*tokitr == "t_integer"){
@@ -202,8 +194,6 @@ int SyntaxAnalyzer::vars(){//determines if type is valid
 //pre: user passes in variable / identifier
 //post: returns true/false if variable has been declared
 bool SyntaxAnalyzer::declaredCheck(string variable){
-	cout << "*declaredCheck method" << endl;
-	cout << variable << endl;
 	map<string,string>::iterator itr; //initialize iterator
 	itr = symboltable.find(variable); //search map
 	  if (itr != symboltable.end())   //if found, return true
@@ -216,56 +206,42 @@ bool SyntaxAnalyzer::declaredCheck(string variable){
 //pre: user passes in variable/identifier and the token of the data type being assigned to it
 //post: returns true/false if data type of assignment matches data type of declared variable
 bool SyntaxAnalyzer::typeCheck(string variable, string dataType){
-	cout << "typeCheck method" << endl;
-	cout << variable << endl;
-	cout << dataType << endl;
 	string varType;
 	varType = symboltable[variable];//declared variable type
-	cout << varType << endl;
-
-	if (dataType == "t_int"){
+		if (dataType == "t_int"){
 		if (varType == "t_integer"){
-			cout << "type is correct" <<endl;
 			return true;
-			}
+		}
 		else{
-			cout<<"incorrect type" << endl;
 			return false;
 		}
 	}
 	if (dataType == "t_str"){
 		if (varType == "t_string"){
-			cout << "type is correct" <<endl;
 			return true;
 		}
 		else{
-			cout<<"incorrect type" << endl;
 			return false;
 		}
 	}
-
 }
 
 //STMTLIST -> STMT {STMT} | 0
 bool SyntaxAnalyzer::stmtlist(){
-	cout << "* stmtlist method" << endl;
     int result = stmt();// returns 1 or 2 if valid, 0 if invalid
-    cout << result << endl;
     while (result == 1){
     	result = stmt();
     }
     if (result == 0)
         return false;
     else if (result == 2 || result >= 2)
-            return true;
+        return true;
     else
         return true;
 }
 
 //STMT -> IFSTMT | WHILESTMT | ASSIGNSTMT | INPUTSTMT | OUTPUTSTMT
 int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
-	cout << "*stmt method" << endl;
-	cout << *tokitr << endl;
 	if (*tokitr == "t_if"){
         tokitr++; lexitr++;
         if (tokitr!=tokens.end() && ifstmt()) return 1;//modified-TH
@@ -329,7 +305,6 @@ bool SyntaxAnalyzer::ifstmt(){
 bool SyntaxAnalyzer::elsepart(){
 	if (*tokitr == "t_else"){
 		tokitr++; lexitr++;
-		//if (stmtlist())
 		if (tokitr!=tokens.end() && stmtlist())//modified-TH
 			return true;
 		else
@@ -341,7 +316,6 @@ bool SyntaxAnalyzer::elsepart(){
 //WHILESTMT -> while (EXPR) loop STMTLIST end loop
 // Luis Gonzalez
 bool SyntaxAnalyzer::whilestmt(){
-	cout << "*while stmt" << endl;
 	if (*tokitr == "s_lparen"){
 		tokitr++; lexitr++;
 		if (expr()){
@@ -371,30 +345,23 @@ bool SyntaxAnalyzer::whilestmt(){
 //Miguel
 //ASSIGNSTMT -> id = EXPR ;
 bool SyntaxAnalyzer::assignstmt(){
-	cout << "assignstmt method" << endl;
-	cout << *tokitr << endl;
 	if(tokitr != tokens.end() && *tokitr == "t_id"){
 		string variable = *lexitr;
-		cout << variable << endl;//x
 		tokitr++; lexitr++;
 		if(tokitr != tokens.end() && *tokitr == "s_assign"){
 			cout << *tokitr << endl;//t_int
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
-			//cout << valueType << endl;
 			if(typeCheck(variable, valueType) == false){	// commented it out so my simpleexpr method could work
 				return false;
 			}
-
-			//if{
-				if(expr()){
-					cout << *tokitr << endl;
-					if(tokitr != tokens.end() && *tokitr == "s_semi"){
-						tokitr++; lexitr++;
-						return true;
-					}
+			if(expr()){
+				cout << *tokitr << endl;
+				if(tokitr != tokens.end() && *tokitr == "s_semi"){
+					tokitr++; lexitr++;
+					return true;
 				}
-			//}
+			}
 		}
 	}
 	return false;
@@ -402,8 +369,6 @@ bool SyntaxAnalyzer::assignstmt(){
 
 //INPUTSTMT -> input ( id )
 bool SyntaxAnalyzer::inputstmt(){
- 	cout << "*inputstmt method" << endl;
- 	cout << *tokitr << endl;
     if (*tokitr == "s_lparen"){
         tokitr++; lexitr++;
         if (*tokitr == "t_id"){
@@ -464,9 +429,7 @@ bool SyntaxAnalyzer::expr(){
 // Luis Gonzalez
 //SIMPLEEXPR -> TERM [ARITHOP | RELOP TERM]
 bool SyntaxAnalyzer::simpleexpr(){
-	cout << "IN simpleexpr" << endl;
 	if (term()){
-		cout << *tokitr <<endl;
 		// if (*tokitr == "s_semi") return true;
 		if (*tokitr == "s_semi" || *tokitr == "s_rparen") return true;
 		else if (arithop()){
@@ -487,8 +450,6 @@ bool SyntaxAnalyzer::simpleexpr(){
 
 //TERM -> int | str | id | (EXPR)
 bool SyntaxAnalyzer::term(){
-	cout << "*term method" << endl;
-	cout << *tokitr << endl;
     if ((*tokitr == "t_int") || (*tokitr == "t_str")){
     	tokitr++; lexitr++;
     	return true;
@@ -527,26 +488,20 @@ bool SyntaxAnalyzer::logicop(){
     else
         return false;
 }
-
 //ARITHOP -> + | - | * | / | %
 bool SyntaxAnalyzer::arithop(){
-	cout << "*arithop method" << endl;
-	cout << *tokitr << endl;
     if ((*tokitr == "s_mult") || (*tokitr == "s_plus") || (*tokitr == "s_minus")
         || (*tokitr == "s_div")	|| (*tokitr == "s_mod")){
         tokitr++; lexitr++;
         return true;
     }
     else{
-    	cout << "false" << endl;
         return false;
     }
 }
 
 //RELOP -> == | < | <= | > | >= | !=
 bool SyntaxAnalyzer::relop(){
-	cout << "in relop" << endl;
-	cout << *tokitr << endl;
     if ((*tokitr == "s_lt") || (*tokitr == "s_gt") || (*tokitr == "s_ge")
         || (*tokitr == "s_eq") || (*tokitr == "s_ne") || (*tokitr == "s_le")){
         tokitr++; lexitr++;
@@ -576,7 +531,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-    ifstream infile("whilestmtTest.txt");
+    ifstream infile("codelexemes5.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
