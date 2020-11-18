@@ -59,9 +59,8 @@ class SyntaxAnalyzer{
         // If an error occurs, a message prints indicating the token/lexeme pair
         // that caused the error.  If no error occurs, the symboltable contains all
         // variables and datatypes.
-
-
 };
+
 SyntaxAnalyzer::SyntaxAnalyzer(istream& infile){
     string line, tok, lex;
     int pos;
@@ -234,7 +233,7 @@ bool SyntaxAnalyzer::stmtlist(){
     }
     if (result == 0)
         return false;
-    else if (result == 2 || result >= 2)
+    else if (result == 2)
         return true;
     else
         return true;
@@ -273,6 +272,7 @@ int SyntaxAnalyzer::stmt(){  // returns 1 or 2 if valid, 0 if invalid
     }
     return 2;  //stmtlist can be null
 }
+
 //IFSTMT -> if (EXPR) then STMTLIST ELSEPART end if
 bool SyntaxAnalyzer::ifstmt(){
 	if (tokitr != tokens.end() && *tokitr == "s_lparen"){
@@ -352,7 +352,7 @@ bool SyntaxAnalyzer::assignstmt(){
 			cout << *tokitr << endl;//t_int
 			tokitr++; lexitr++;
 			string valueType = *tokitr;
-			if(typeCheck(variable, valueType) == false){	// commented it out so my simpleexpr method could work
+			if(typeCheck(variable, valueType) == false && *tokitr != "t_id"){	// commented it out so my simpleexpr method could work
 				return false;
 			}
 			if(expr()){
@@ -397,7 +397,10 @@ bool SyntaxAnalyzer::outputstmt(){
 		if(expr()){
 			if(tokitr != tokens.end() && *tokitr == "s_rparen"){
 				tokitr++; lexitr++;
-				return true;
+				if(tokitr != tokens.end() && *tokitr == "s_semi"){
+					tokitr++; lexitr++;
+					return true;
+				}
 			}
 		}
 		else if(tokitr != tokens.end() && *tokitr == "t_str"){
@@ -430,7 +433,6 @@ bool SyntaxAnalyzer::expr(){
 //SIMPLEEXPR -> TERM [ARITHOP | RELOP TERM]
 bool SyntaxAnalyzer::simpleexpr(){
 	if (term()){
-		// if (*tokitr == "s_semi") return true;
 		if (*tokitr == "s_semi" || *tokitr == "s_rparen") return true;
 		else if (arithop()){
 			if (term()){
@@ -443,35 +445,22 @@ bool SyntaxAnalyzer::simpleexpr(){
 			}
 		}
 		else return false;
-	// write this function
 	}
 	return true;
 }
 
 //TERM -> int | str | id | (EXPR)
 bool SyntaxAnalyzer::term(){
-    if ((*tokitr == "t_int") || (*tokitr == "t_str")){
+    if ((*tokitr == "t_int")
+	|| (*tokitr == "t_str")
+	|| (*tokitr == "t_id")){
     	tokitr++; lexitr++;
     	return true;
     }
-    //modified -TH
-    else if((*tokitr == "t_id")){
-    	//tokitr++; lexitr++;
-    	string variable = *lexitr;
-    	if(typeCheck(variable, *tokitr)==false){
-    		return false;
-    	}
-    	else{
-			tokitr++; lexitr++;
-			return true;
-    	}
-    }
     else
-    	cout << *tokitr << endl;
         if (*tokitr == "s_lparen"){
             tokitr++; lexitr++;
             if (expr())
-            	cout << *tokitr << endl;
                 if (*tokitr == "s_rparen"){
                     tokitr++; lexitr++;
                     return true;
