@@ -341,6 +341,7 @@ bool SyntaxAnalyzer::elsepart(){
 //WHILESTMT -> while (EXPR) loop STMTLIST end loop
 // Luis Gonzalez
 bool SyntaxAnalyzer::whilestmt(){
+	cout << "*while stmt" << endl;
 	if (*tokitr == "s_lparen"){
 		tokitr++; lexitr++;
 		if (expr()){
@@ -484,16 +485,6 @@ bool SyntaxAnalyzer::simpleexpr(){
 	return true;
 }
 
-bool SyntaxAnalyzer::logicop(){
-    if ((*tokitr == "s_and") || (*tokitr == "s_or")){
-        tokitr++; lexitr++;
-        return true;
-    }
-    else
-        return false;
-}
-
-
 //TERM -> int | str | id | (EXPR)
 bool SyntaxAnalyzer::term(){
 	cout << "*term method" << endl;
@@ -585,11 +576,7 @@ std::istream& SyntaxAnalyzer::getline_safe(std::istream& input, std::string& out
 }
 
 int main(){
-<<<<<<< HEAD
-    ifstream infile("codelexemes5.txt");
-=======
-    ifstream infile("codelexemes4.txt");
->>>>>>> 66e4b3a5739931a2da9fdcbe22975a80284f2ec5
+    ifstream infile("whilestmtTest.txt");
     if (!infile){
     	cout << "error opening lexemes.txt file" << endl;
         exit(-1);
